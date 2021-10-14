@@ -1,6 +1,6 @@
 ## Variables
 NAME    = main
-SRC     = empreinte.cpp main.cpp 
+SRC     = main.cpp 
 OBJ     = $(SRC:.cpp=.o)
 CFLAGS  = -Wall -Werror -Wextra -pedantic -ansi -O3
 LFLAGS    = -lcrypto -lssl

@@ -1,15 +1,35 @@
 #include <iostream>
-#include <string>
-#include "empreinte.cpp"
+#include <sstream>
+#include <iomanip>
+#include "hash.cpp"
 
 using namespace std;
 
-int main(int argc, char *argv[]){
-    cout << "Hello Uiii !" << endl;
+string hexStr(Byte *data, int len)
+{
+    stringstream ss;
+    ss << hex;
 
-    byte res[32];
+    for (int i(0); i < len; ++i)
+        ss << setw(2) << setfill('0') << (int)data[i];
+    return ss.str();
+}
 
-    cout << hash_MD5("Salut", res) << endl;
-    cout << hash_SHA1("Bob", res) << endl;
+int main(int argc, char *argv[])
+{
+
+    Byte b[32];
+
+    char *s = "Salut";
+    char *s2 = "Bob";
+
+    hash_MD5(s, b);
+    string res = hexStr(b, 32);
+    cout << res << endl;
+
+    hash_SHA1(s2, b);
+    res = hexStr(b, 32);
+    cout << res << endl;
+
     return 0;
 }
