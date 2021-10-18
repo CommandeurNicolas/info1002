@@ -31,7 +31,7 @@ string Inverter::i2c(int code) {
     int codeTemp = code;
     int n = 1;
     while (codeTemp >= (int) pow(this->size, n)) {
-        if (n < this->minSize){
+        if (n > this->minSize){
             codeTemp -= (int) pow(this->size, n);
         }
         n++;
