@@ -8,6 +8,7 @@
 ***Pour lancer le docker avec un alpine***
 ```bash
     $ cd C:\Users\comco\Documents\FAC YOU\M2\info1002\TP
+    $ docker rm info1002-container
     $ docker run -it --name info1002-container -v ${pwd}:/app frolvlad/alpine-gcc
     $ docker start info1002-container
     $ docker exec -it info1002-container sh

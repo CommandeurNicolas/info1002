@@ -18,57 +18,38 @@ Inverter::Inverter(string alphabet, long min, long max, void hashingMethod(strin
     this->hash = hashingMethod;
     this->N = 0;
     this->size = (long) this->alphabet.length();
-    this->T = {};
+    this->powT = {};
 
     for (long i = this->minSize; i <= this->maxSize; i++) {
         this->N += pow((long) this->size, i);
-        this->T.push_back(pow((long) this->size, i));
+        this->powT.push_back(pow((long) this->size, i));
     }
 
 }
 
 string Inverter::i2c(long code) {
-//    long codeTemp = code;
-//    string res = "";
-//    int n = 0;
-//
-//    for (int i = this->minSize; i <= this->maxSize; i++) {
-//        if (this->T[i] < codeTemp) {
-//            codeTemp -=  this->T[i];
-//            n++;
-//        }
-//    }
-//
-//    char letter = codeToLetter(codeTemp % this->size);
-//
-//    for (int i = 0; i < this->maxSize; i++) {
-//        res.append(string(1,letter));
-//        codeTemp = codeTemp / this->size;
-//        letter = codeToLetter(codeTemp % this->size);
-//
-//    }
-//
-//    reverse(res.begin(),  res.end());
-//    return res;
-    long num = code&;
-    long new_n = num % this->size;
-    int i = 0;
-    for (int j = this->minSize; j <= this->maxSize; j++) {
-        if (this->T[i] < code) {
-            num = num - this->T[i];
-            i++;
-        }
-    }
-    string res;
-    for (int i = 0; i < this->maxSize; i++) {
-        res += (this->alphabet[new_n]);
-        num = (num / this->size);
-        new_n = (num % this->size);
-    }
-    reverse(res.begin(),res.end());
-    cout << res << endl;
-    return res;
+   long codeTemp = code;
+   string res = "";
+   int n = 0;
 
+   for (int i = this->minSize; i <= this->maxSize; i++) {
+       if (this->powT[n] < codeTemp) {
+           codeTemp -= this->powT[n];
+           n++;
+       }
+   }
+
+   char letter = codeToLetter(codeTemp % this->size);
+
+   for (int i = 0; i < this->maxSize; i++) {
+       res.append(string(1,letter));
+       codeTemp = codeTemp / this->size;
+       letter = codeToLetter(codeTemp % this->size);
+
+   }
+
+   reverse(res.begin(),  res.end());
+   return res;
 }
 
 char Inverter::codeToLetter(long code) {

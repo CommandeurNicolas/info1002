@@ -31,9 +31,14 @@ int main(int argc, char *argv[]) {
     hash_SHA1_string(s2, b);
     res = hexStr(b, 32);
     cout << res << endl;
-    Inverter myInverter("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 4, 5, hash_SHA1_string);
 
-    cout << myInverter.i2c(142678997) << endl;
+    Inverter myInverter1("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, 3, hash_SHA1_string);
+    cout << myInverter1.i2c(12345) << endl;
+    Inverter myInverter2("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4, 4, hash_SHA1_string);
+    cout << myInverter2.i2c(1234) << endl;
+    Inverter myInverter3("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 4, 5, hash_SHA1_string);
+    cout << myInverter3.i2c(142678997) << endl;
+
     return 0;
 }
 

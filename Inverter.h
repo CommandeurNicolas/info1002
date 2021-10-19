@@ -16,7 +16,7 @@ public:
     long minSize, maxSize;
     long size;
     long N;
-    vector<long> T;
+    vector<long> powT;
 
     void (*hash)(string s, Byte *empreinte);
 
