@@ -10,52 +10,68 @@
 
 using namespace std;
 
-Inverter::Inverter(string alphabet, double min, double max, void hashingMethod(string, Byte *)) {
+Inverter::Inverter(string alphabet, long min, long max, void hashingMethod(string, Byte *)) {
     this->alphabet = alphabet;
 
     this->minSize = min;
     this->maxSize = max;
     this->hash = hashingMethod;
     this->N = 0;
-    this->size = this->alphabet.length();
+    this->size = (long) this->alphabet.length();
     this->T = {};
 
-    for (double i = this->minSize; i <= this->maxSize; i++) {
-        this->N += pow((double) this->size, i);
-        this->T.push_back(pow((double) this->size, i));
+    for (long i = this->minSize; i <= this->maxSize; i++) {
+        this->N += pow((long) this->size, i);
+        this->T.push_back(pow((long) this->size, i));
     }
 
 }
 
-string Inverter::i2c(int code) {
-    int codeTemp = code;
-    int n = 1;
-    while (codeTemp >= (int) pow(this->size, n)) {
-        if (n > this->minSize){
-            codeTemp -= (int) pow(this->size, n);
+string Inverter::i2c(long code) {
+//    long codeTemp = code;
+//    string res = "";
+//    int n = 0;
+//
+//    for (int i = this->minSize; i <= this->maxSize; i++) {
+//        if (this->T[i] < codeTemp) {
+//            codeTemp -=  this->T[i];
+//            n++;
+//        }
+//    }
+//
+//    char letter = codeToLetter(codeTemp % this->size);
+//
+//    for (int i = 0; i < this->maxSize; i++) {
+//        res.append(string(1,letter));
+//        codeTemp = codeTemp / this->size;
+//        letter = codeToLetter(codeTemp % this->size);
+//
+//    }
+//
+//    reverse(res.begin(),  res.end());
+//    return res;
+    long num = code&;
+    long new_n = num % this->size;
+    int i = 0;
+    for (int j = this->minSize; j <= this->maxSize; j++) {
+        if (this->T[i] < code) {
+            num = num - this->T[i];
+            i++;
         }
-        n++;
     }
-    string res = string(this->maxSize, this->alphabet[0]);
-    cout << "code temps init : "<< codeTemp<<endl;
-    for (int i = 0; i < n; i++) {
-
-        int codeNextLettre = codeTemp % this->size;
-        cout <<i<<endl;
-
-        cout << "Before : " << codeTemp << " " << res[i] << " --> "
-        << codeToLetter(codeNextLettre)
-        << " ("<<codeNextLettre<<")" << endl;
-
-        res[i] = codeToLetter(codeNextLettre);
-        cout << "After : " << floor(codeTemp / this->size)  << endl;
-        codeTemp = floor(codeTemp / this->size);
+    string res;
+    for (int i = 0; i < this->maxSize; i++) {
+        res += (this->alphabet[new_n]);
+        num = (num / this->size);
+        new_n = (num % this->size);
     }
-    reverse(res.begin(),  res.end());
+    reverse(res.begin(),res.end());
+    cout << res << endl;
     return res;
+
 }
 
-char Inverter::codeToLetter(int code) {
+char Inverter::codeToLetter(long code) {
 
     return this->alphabet[code];
 

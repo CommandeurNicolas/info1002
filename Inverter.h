@@ -13,18 +13,18 @@ using namespace std;
 class Inverter {
 public:
     string alphabet;
-    double minSize, maxSize;
-    int size;
-    double N;
-    vector<double> T;
+    long minSize, maxSize;
+    long size;
+    long N;
+    vector<long> T;
 
     void (*hash)(string s, Byte *empreinte);
 
-    Inverter(string alphabet, double min, double max, void hashingMethod(string, Byte *));
+    Inverter(string alphabet, long min, long max, void hashingMethod(string, Byte *));
 
-    string i2c(int code);
+    string i2c(long code);
 
-    char codeToLetter(int code);
+    char codeToLetter(long code);
 
 };
 
