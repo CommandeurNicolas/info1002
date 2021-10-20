@@ -10,27 +10,47 @@
 
 using namespace std;
 
+struct Chaine{
+    uint64_t b, e;
+};
+
+
+
 class Inverter {
 public:
+    // Member
     string alphabet;
-    long minSize, maxSize;
-    long size;
-    long N;
-    vector<long> powT;
+    uint64_t minSize, maxSize;
+    uint64_t size;
+    uint64_t N;
+    vector<uint64_t> powT;
+
+    string texte;
+    Byte *b;
+    int sizeByte;
+
+    Chaine chaine;
 
     void (*hash)(string s, Byte *empreinte);
 
-    Inverter(string alphabet, long min, long max, void hashingMethod(string, Byte *));
+    // Constructor
+    Inverter(string alphabet, uint64_t min, uint64_t max, void hashingMethod(string, Byte *), int sizeByte);
 
-    string i2c(long code);
+    // Functions
+
+    string i2c(uint64_t code);
 
     uint64_t h2i(Byte *empreinte, int t);
 
-    long i2i(long code, int indice);
+    uint64_t i2i(uint64_t code, int indice);
 
-    char codeToLetter(long code);
+    char codeToLetter(uint64_t code);
 
+    Chaine nouvelle_chaine(uint64_t idxl, int largeur);
 
+    uint64_t index_aleatoire();
+
+    vector<Chaine> creer_table(int largeur, int hauteur);
 };
 
 

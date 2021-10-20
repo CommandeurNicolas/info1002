@@ -7,41 +7,54 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <random>
+#include <limits>
 
 using namespace std;
 
-Inverter::Inverter(string alphabet, long min, long max, void hashingMethod(string, Byte *)) {
+Inverter::Inverter(string alphabet, uint64_t min, uint64_t max, void hashingMethod(string, Byte *), int sizeByte) {
     this->alphabet = alphabet;
 
     this->minSize = min;
     this->maxSize = max;
     this->hash = hashingMethod;
     this->N = 0;
-    this->size = (long) this->alphabet.length();
-    this->powT = {};
+    this->size = (uint64_t)
+    this->alphabet.length();
 
-    for (long i = this->minSize; i <= this->maxSize; i++) {
+    this->sizeByte = sizeByte;
+    this->b = new Byte[this->sizeByte];
+    this->texte = new char[this->maxSize];
+
+    this->chaine.b = 0;
+    this->chaine.e = 0;
+
+    this->powT = {};
+    for (uint64_t i = this->minSize; i <= this->maxSize; i++) {
         this->N += pow(this->size, i);
-        this->powT.push_back(pow((long) this->size, i));
+        this->powT.push_back(pow((uint64_t)
+        this->size, i));
     }
 
 }
 
-string Inverter::i2c(long code) {
-    long codeTemp = code;
+string Inverter::i2c(uint64_t code) {
+    uint64_t codeTemp = code;
     string res = "";
     int n = 0;
-
-    for (int i = this->minSize; i <= this->maxSize; i++) {
+    int i;
+    for (i = this->minSize; i <= this->maxSize; i++) {
         if (this->powT[n] < codeTemp) {
             codeTemp -= this->powT[n];
             n++;
+        } else {
+            break;
         }
     }
 
     char letter = codeToLetter(codeTemp % this->size);
 
-    for (int i = 0; i < this->maxSize; i++) {
+    for (int j = 0; j < i; j++) {
         res.append(string(1, letter));
         codeTemp = codeTemp / this->size;
         letter = codeToLetter(codeTemp % this->size);
@@ -51,15 +64,48 @@ string Inverter::i2c(long code) {
     return res;
 }
 
-char Inverter::codeToLetter(long code) {
-
+char Inverter::codeToLetter(uint64_t code) {
     return this->alphabet[code];
-
 }
 
 // t begin at 0 instead of 1
 uint64_t Inverter::h2i(Byte *empreinte, int t) {
     Byte *temp = empreinte;
-    return *((uint64_t *) temp + t) % this->N;
+    return (*((uint64_t *) temp) + t) % this->N;
 }
 
+uint64_t Inverter::i2i(uint64_t code, int indice) {
+    this->hash(i2c(code), this->b);
+    return h2i(this->b, indice);
+}
+
+Chaine Inverter::nouvelle_chaine(uint64_t idxl, int largeur) {
+    Chaine chaine;
+    chaine.b = idxl;
+    uint64_t code = idxl;
+    for (int i = 1; i < largeur; ++i) {
+        code = i2i(code, i);
+    }
+    chaine.e = code;
+    return chaine;
+}
+
+uint64_t Inverter::index_aleatoire() {
+    random_device rd;
+    mt19937_64 eng(rd());
+    uniform_int_distribution<uint64_t> distr;
+    return (distr(eng)) % this->N;
+}
+
+bool compare2Chaine(const Chaine &a,const Chaine &b){
+    return a.e < b.e;
+}
+
+vector<Chaine> Inverter::creer_table(int largeur, int hauteur) {
+    vector<Chaine> tab;
+    for (int i = 0; i < hauteur; ++i) {
+        tab.push_back( nouvelle_chaine( this->index_aleatoire(),largeur));
+    }
+    sort(tab.begin(),  tab.end(), compare2Chaine);
+    return tab;
+}
