@@ -23,7 +23,7 @@
 
 ***Dans le docker***
 ```bash
-    $ apk add git make openssl libressl-dev g++
+    $ apk add make openssl libressl-dev g++
 ```
 
 
