@@ -61,12 +61,12 @@ void i2cTest(string s) {
     // Inverter myInverter3("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 4, 5, hashFunction);
     // cout << "When alphabet is ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz, min = 4 and max = 5 : " << myInverter3.i2c(i) << endl;
 
-    Inverter myInverter(alphabet, min_size, max_size, hashFunction);
+    Inverter myInverter(alphabet, min_size, max_size, hashFunction,32);
     cout << "When alphabet is "<< alphabet << ", min = "<< min_size << " and max = " << max_size << " : " << myInverter.i2c(i) << endl << endl;
 }
 
 void h2iTest(vector<string> args) {
-    Inverter myInverter(alphabet, min_size, max_size, hashFunction);
+    Inverter myInverter(alphabet, min_size, max_size, hashFunction,32);
 
     hash_MD5_string(args[0],b);
     cout << "alphabet = " << alphabet << endl << "taille_min = " << min_size << endl << "taille_max = " << max_size << endl << "N = " << myInverter.N << endl;
