@@ -9,15 +9,17 @@
 #include <vector>
 #include <random>
 #include <limits>
-
+#include <bitset>
+#include <fstream>
 using namespace std;
 
-Inverter::Inverter(string alphabet, uint64_t min, uint64_t max, void hashingMethod(string, Byte *), int sizeByte) {
+Inverter::Inverter(string alphabet, uint64_t min, uint64_t max, void hashMethod(string, Byte *), int sizeByte, string hashingMethod) {
     this->alphabet = alphabet;
 
     this->minSize = min;
     this->maxSize = max;
-    this->hash = hashingMethod;
+    this->hash = hashMethod;
+    this->hashingMethod = hashingMethod;
     this->N = 0;
     this->size = (uint64_t)
     this->alphabet.length();
@@ -28,6 +30,9 @@ Inverter::Inverter(string alphabet, uint64_t min, uint64_t max, void hashingMeth
 
     this->chaine.b = 0;
     this->chaine.e = 0;
+
+    this->table.hauteur = 0;
+    this->table.largeur = 0;
 
     this->powT = {};
     for (uint64_t i = this->minSize; i <= this->maxSize; i++) {
@@ -93,19 +98,45 @@ Chaine Inverter::nouvelle_chaine(uint64_t idxl, int largeur) {
 uint64_t Inverter::index_aleatoire() {
     random_device rd;
     mt19937_64 eng(rd());
-    uniform_int_distribution<uint64_t> distr;
+    uniform_int_distribution <uint64_t> distr;
     return (distr(eng)) % this->N;
 }
 
-bool compare2Chaine(const Chaine &a,const Chaine &b){
+bool compare2Chaine(const Chaine &a, const Chaine &b) {
     return a.e < b.e;
 }
 
-vector<Chaine> Inverter::creer_table(int largeur, int hauteur) {
-    vector<Chaine> tab;
-    for (int i = 0; i < hauteur; ++i) {
-        tab.push_back( nouvelle_chaine( this->index_aleatoire(),largeur));
+Table Inverter::creer_table(int largeur, int hauteur) {
+    Table t;
+    t.hauteur = hauteur;
+    t.largeur = largeur;
+    for (int i = 0; i < t.hauteur; ++i) {
+        t.chaines.push_back(nouvelle_chaine(this->index_aleatoire(), t.largeur));
     }
-    sort(tab.begin(),  tab.end(), compare2Chaine);
-    return tab;
+    sort(t.chaines.begin(), t.chaines.end(), compare2Chaine);
+    return t;
+}
+
+bool Inverter::write(string namefile) {
+    // Create and open a text file
+    ofstream MyFile(namefile);
+
+    if (!MyFile.good())
+        return false;
+
+    MyFile << this->hashingMethod << " " <<
+           this->alphabet << " " <<
+           this->minSize << " " <<
+           this->maxSize << " " <<
+           this->table.hauteur << " " <<
+           this->table.largeur << endl;
+
+    string res = "";
+    for (const auto &item: this->table.chaines) {
+        res += bitset<64>(item.b).to_string();
+        res += bitset<64>(item.e).to_string();
+    }
+    MyFile << res << endl;
+    MyFile.close();
+    return true;
 }
