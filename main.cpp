@@ -19,28 +19,45 @@ string hexStr(Byte *data, int len) {
 
 int main(int argc, char *argv[]) {
 
-    Byte b[32];
-
     string s = "Salut";
     string s2 = "Bob";
 
-    hash_MD5_string(s, b);
-    string res = hexStr(b, 32);
+    Inverter myInverter1("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, 3, hash_SHA1_string, 20);
+    Inverter myInverter2("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4, 4, hash_SHA1_string, 20);
+    Inverter myInverter3("abcdefghijklmnopqrstuvwxyz", 4, 5, hash_MD5_string, 20);
+
+    hash_MD5_string(s, myInverter3.b);
+    string res = hexStr(myInverter3.b, myInverter3.sizeByte);
     cout << res << endl;
 
-    hash_SHA1_string(s2, b);
-    res = hexStr(b, 32);
+    hash_SHA1_string(s2, myInverter3.b);
+    res = hexStr(myInverter3.b, myInverter3.sizeByte);
     cout << res << endl;
 
-    Inverter myInverter1("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, 3, hash_SHA1_string);
     cout << myInverter1.i2c(12345) << endl;
-    Inverter myInverter2("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4, 4, hash_SHA1_string);
     cout << myInverter2.i2c(1234) << endl;
-    Inverter myInverter3("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4, 5, hash_SHA1_string);
-    cout << myInverter3.i2c(142678997) << endl;
+    cout << myInverter3.i2c(382537153) << endl;
 
-    hash_MD5_string("oups",b);
-    cout << hexStr(b,32)<<endl << myInverter3.N <<endl << myInverter3.h2i(b,0) << endl;
+    hash_MD5_string("oups", myInverter3.b);
+    cout << hexStr(myInverter3.b, myInverter3.sizeByte) << endl <<
+         myInverter3.N << endl
+         << "h2i : " << myInverter3.h2i(myInverter3.b, 1) << endl;
+
+    cout << myInverter3.i2i(1, 1) << endl;
+
+    Chaine chaine = myInverter3.nouvelle_chaine(1, 1);
+    cout << "begin de taille 1 a " << 1 << ":" << chaine.b << " ..... " << chaine.e << endl;
+    chaine = myInverter3.nouvelle_chaine(1, 2);
+    cout << "begin de taille 1 a " << 2 << ":" << chaine.b << " ..... " << chaine.e << endl;
+    chaine = myInverter3.nouvelle_chaine(1, 10);
+    cout << "begin de taille 1 a " << 10 << ":" << chaine.b << " ..... " << chaine.e << endl;
+     chaine = myInverter3.nouvelle_chaine(1, 100);
+    cout << "begin de taille 1 a " << 100 << ":" << chaine.b << " ..... " << chaine.e << endl;
+
+    vector<Chaine> tab = myInverter3.creer_table(10,1000);
+    for (const auto &item : tab){
+        cout << item.b << "...." << item.e << endl;
+    }
 
     return 0;
 }
