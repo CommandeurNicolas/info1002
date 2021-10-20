@@ -21,35 +21,34 @@ Inverter::Inverter(string alphabet, long min, long max, void hashingMethod(strin
     this->powT = {};
 
     for (long i = this->minSize; i <= this->maxSize; i++) {
-        this->N += pow((long) this->size, i);
+        this->N += pow(this->size, i);
         this->powT.push_back(pow((long) this->size, i));
     }
 
 }
 
 string Inverter::i2c(long code) {
-   long codeTemp = code;
-   string res = "";
-   int n = 0;
+    long codeTemp = code;
+    string res = "";
+    int n = 0;
 
-   for (int i = this->minSize; i <= this->maxSize; i++) {
-       if (this->powT[n] < codeTemp) {
-           codeTemp -= this->powT[n];
-           n++;
-       }
-   }
+    for (int i = this->minSize; i <= this->maxSize; i++) {
+        if (this->powT[n] < codeTemp) {
+            codeTemp -= this->powT[n];
+            n++;
+        }
+    }
 
-   char letter = codeToLetter(codeTemp % this->size);
+    char letter = codeToLetter(codeTemp % this->size);
 
-   for (int i = 0; i < this->maxSize; i++) {
-       res.append(string(1,letter));
-       codeTemp = codeTemp / this->size;
-       letter = codeToLetter(codeTemp % this->size);
+    for (int i = 0; i < this->maxSize; i++) {
+        res.append(string(1, letter));
+        codeTemp = codeTemp / this->size;
+        letter = codeToLetter(codeTemp % this->size);
+    }
 
-   }
-
-   reverse(res.begin(),  res.end());
-   return res;
+    reverse(res.begin(), res.end());
+    return res;
 }
 
 char Inverter::codeToLetter(long code) {
@@ -57,3 +56,10 @@ char Inverter::codeToLetter(long code) {
     return this->alphabet[code];
 
 }
+
+// t begin at 0 instead of 1
+uint64_t Inverter::h2i(Byte *empreinte, int t) {
+    Byte *temp = empreinte;
+    return *((uint64_t *) temp + t) % this->N;
+}
+

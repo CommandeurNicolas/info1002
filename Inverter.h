@@ -24,7 +24,12 @@ public:
 
     string i2c(long code);
 
+    uint64_t h2i(Byte *empreinte, int t);
+
+    long i2i(long code, int indice);
+
     char codeToLetter(long code);
+
 
 };
 
