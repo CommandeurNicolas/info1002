@@ -14,6 +14,11 @@ struct Chaine{
     uint64_t b, e;
 };
 
+struct Table{
+    vector<Chaine> chaines;
+    int hauteur, largeur;
+};
+
 
 
 class Inverter {
@@ -25,16 +30,18 @@ public:
     uint64_t N;
     vector<uint64_t> powT;
 
+    string hashingMethod;
     string texte;
     Byte *b;
     int sizeByte;
 
     Chaine chaine;
+    Table table;
 
     void (*hash)(string s, Byte *empreinte);
 
     // Constructor
-    Inverter(string alphabet, uint64_t min, uint64_t max, void hashingMethod(string, Byte *), int sizeByte);
+    Inverter(string alphabet, uint64_t min, uint64_t max, void hashMethod(string, Byte *), int sizeByte, string hashingMethod);
 
     // Functions
 
@@ -50,7 +57,11 @@ public:
 
     uint64_t index_aleatoire();
 
-    vector<Chaine> creer_table(int largeur, int hauteur);
+    Table creer_table(int largeur, int hauteur);
+
+    bool write(string namefile);
+    bool read(string namefile);
+    void afficheTable(int shift);
 };
 
 
