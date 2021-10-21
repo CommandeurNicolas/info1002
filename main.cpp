@@ -10,7 +10,8 @@
 using namespace std;
 
 // Global vars
-Byte b[32];
+int size = 0;
+Byte *b;
 auto hashFunction = hash_MD5_string;
 int min_size = 4;
 int max_size = 5;
@@ -18,6 +19,7 @@ string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 int value;
 int d = 5;
 string hashName;
+Inverter myInverter;
 
 
 
@@ -31,7 +33,7 @@ void setSHA1HashFunction() {
 
 void hashTest(string s) {
     string res;
-    Inverter myInverter(alphabet, min_size, max_size, hashFunction, 32, "");
+    // Inverter myInverter(alphabet, min_size, max_size, hashFunction, 32, "");
 
     if (hashFunction == hash_MD5_string) {
         hash_MD5_string(s, b);
@@ -55,19 +57,14 @@ void i2cTest(string s) {
     // Inverter myInverter3("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 4, 5, hashFunction);
     // cout << "When alphabet is ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz, min = 4 and max = 5 : " << myInverter3.i2c(i) << endl;
 
-    Inverter myInverter(alphabet, min_size, max_size, hashFunction, 32, "");
-    cout << "When alphabet is " << alphabet << ", min = " << min_size << " and max = " << max_size << " : "
-         << myInverter.i2c(i) << endl << endl;
+    // Inverter myInverter(alphabet, min_size, max_size, hashFunction);
+    cout << "When alphabet is "<< alphabet << ", min = "<< min_size << " and max = " << max_size << " : " << myInverter.i2c(i) << endl << endl;
 }
 
-void h2iTest(vector <string> args) {
-    Inverter myInverter(alphabet, min_size, max_size, hashFunction, 16, "");
-
-    hash_MD5_string(args[0], b);
-    cout << "alphabet = " << alphabet << endl << "taille_min = " << min_size << endl << "taille_max = " << max_size
-         << endl << "N = " << myInverter.N << endl;
-    cout << "MD5(\"oups\") = " << myInverter.hexStr(b) << endl << "h2i(MD5(\"oups\"), " << args[1] << ") = "
-         << myInverter.h2i(b, stoi(args[1])) << endl << endl;
+void h2iTest(vector<string> args) {
+    hash_MD5_string(args[0],b);
+    cout << "alphabet = " << alphabet << endl << "taille_min = " << min_size << endl << "taille_max = " << max_size << endl << "N = " << myInverter.N << endl;
+    cout << "MD5(\"oups\") = " << myInverter.hexStr(b) << endl << "h2i(MD5(\"oups\"), "<< args[1] << ") = " << myInverter.h2i(b, stoi(args[1])) << endl << endl;
 }
 
 void i2iTest(vector <string> args) {
@@ -75,12 +72,40 @@ void i2iTest(vector <string> args) {
     // TODO: faire le test de i2i (QUESTION 6)
 }
 
+void rainbow_table(vector<string> args) {
+    myInverter.table = myInverter.creer_table(stoi(args[0]), stoi(args[1]));
+    myInverter.write(args[2]);
+}
 
-int main2(int argc, char *argv[]) {
+void rainbow_info(vector<string> args) {
+    myInverter.read(args[0]);
+    myInverter.afficheTable(stoi(args[1]));
+}
+
+void rainbow_stats(vector<string> args) {
+    
+}
+
+void rainbow_crack(vector<string> args) {
+    
+}
+
+void rainbow_bruteforce(vector<string> args) {
+    
+}
+
+int main(int argc, char *argv[]) {
 
     // CLI PARSING
     CLI::App app{};
-
+    // Create subcommand (via options)
+    vector<string> createArgs, infoArgs, statsArgs, crackArgs, bruteforceArgs;
+    auto create = app.add_option("--create", createArgs, "create the corresponding rainbow tables (M=height, T=width)")->expected(3);
+    auto info = app.add_option("--info", infoArgs, "display some information about the table from given file")->expected(2);
+    auto stats = app.add_option("--stats", statsArgs, "give some information (cover, size) about rainbow tables without computing them (M=height, T=width)")->expected(2);
+    auto crack = app.add_option("--crack", crackArgs, "crack the given hash with the rainbow tables")->allow_extra_args(true);
+    auto bruteforce = app.add_option("--bruteforce", bruteforceArgs, "brute force the given hash")->expected(1);
+    
     // App command flags
     bool isMD5{false};
     bool isSHA1{false};
@@ -89,15 +114,48 @@ int main2(int argc, char *argv[]) {
 
     // App options
     app.add_option("--alphabet", alphabet, "allowed letters for cleartext");
-
     app.add_option("--min-size", min_size, "minimum size of clear text");
     app.add_option("--max-size", max_size, "maximum size of clear text");
-
     app.add_option("--value", value, "value that will be treated");
-
     app.add_option("-d, --delay", d, "number of seconds between consecutive log messages (default 5)");
 
-    // Test command
+    // Callback for main command
+    app.callback([&]() {
+
+        if (isMD5){
+            hashName = "MD5";
+            hashFunction = hash_MD5_string;
+            b = new Byte[16];
+            size = 16;
+        }
+        if (isSHA1){
+            hashFunction = hash_SHA1_string;
+            hashName = "SHA1";
+            b = new Byte[20];
+            size = 20;
+        }
+
+        string method;
+        if (hashFunction == hash_MD5_string)
+            method = "MD5";
+        if (hashFunction == hash_SHA1_string)
+            method = "SHA1";
+        
+        myInverter = Inverter(alphabet, min_size, max_size, hashFunction, size, method);
+        
+        if (!createArgs.empty())
+            rainbow_table(createArgs);
+        if (!infoArgs.empty())
+            rainbow_info(infoArgs);
+        if (!statsArgs.empty())
+            rainbow_stats(statsArgs);
+        if (!crackArgs.empty())
+            rainbow_crack(crackArgs);
+        if (!bruteforceArgs.empty())
+            rainbow_bruteforce(bruteforceArgs);
+    });
+
+    // Test subcommand
     bool isConfig = false;
     vector <string> sTab;
     vector <string> iTab;
@@ -105,6 +163,7 @@ int main2(int argc, char *argv[]) {
     vector <string> i2iArgs;
     auto test = app.add_subcommand("test", "development tests (\"./main test --list\" for available tests)");
 
+    // Test flag and options
     test->add_flag("--config", isConfig, "print the default config for the tests");
     test->add_option("--hash", sTab, "compute hash of string s1, s2, ...");
     test->add_option("--i2c", iTab, "compute i2c(i1), i2c(i2), ...");
@@ -116,28 +175,16 @@ int main2(int argc, char *argv[]) {
     // test->add_option("--FULL-chain", iTab, "compute (full, with details) chains starting at i1, i2, ...");
     // test->add_option("--chain", iTab, "compute chains starting at i1, i2, ...");
     // test->add_option("--search", iTab, "search the first and last occurences of i in table");
-    test->add_option("--list", "this list");
+    test->add_option("--list", "this list")->expected(0);
 
+    // Callback for test subcommand
     test->callback([&]() {
         if (isConfig) {
             cout << "CONFIG : \n" << endl;
             cout << "Byte b[32]" << endl << "hashFunction = hash_MD5_string" << endl << "min_size = 4" << endl
                  << "max_size = 5" << endl
                  << "alphabet = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\"" << endl << "d = 5" << endl;
-        } else {
-            std::cout << "Testing : \n\n";
         }
-
-        if (isMD5) {
-            hashName = "MD5";
-            hashFunction = hash_MD5_string;
-        }
-
-        if (isSHA1) {
-            hashFunction = hash_SHA1_string;
-            hashName = "SHA1";
-        }
-
 
         if (!sTab.empty())
             for (int i = 0; i < sTab.size(); i++)
@@ -155,14 +202,12 @@ int main2(int argc, char *argv[]) {
     });
 
     // PARSING argv
-    Byte b[32];
-
     CLI11_PARSE(app, argc, argv);
 
     return 0;
 }
 
-int main(int argc, char *argv[]) {
+int main2(int argc, char *argv[]) {
 
     // string s = "Salut";
     // string s2 = "Bob";

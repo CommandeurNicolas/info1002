@@ -40,6 +40,7 @@ public:
     void (*hash)(string s, Byte *empreinte);
 
     // Constructor
+    Inverter();
     Inverter(string alphabet, uint64_t min, uint64_t max, void hashMethod(string, Byte *), int sizeByte,
              string hashingMethod);
 

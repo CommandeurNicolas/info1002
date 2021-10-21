@@ -20,6 +20,9 @@ typedef unsigned char Byte; // facultatif
 
 using namespace std;
 
+// Empty constructor
+Inverter::Inverter() {}
+
 Inverter::Inverter(string alphabet, uint64_t min, uint64_t max, void hashMethod(string, Byte *), int sizeByte,
                    string hashingMethod) {
     this->alphabet = alphabet;

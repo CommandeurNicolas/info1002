@@ -4,3 +4,4 @@ Dockerfile
 *.zip
 *.tar.gz
 res*
+table*
