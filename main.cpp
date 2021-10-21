@@ -17,6 +17,7 @@ int max_size = 5;
 string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 int value;
 int d = 5;
+string hashName;
 
 string hexStr(Byte *data, int len) {
     stringstream ss;
@@ -132,10 +133,16 @@ int main2(int argc, char *argv[]) {
             std::cout << "Testing : \n\n";
         }
 
-        if (isMD5)
+        if (isMD5){
+            hashName = "MD5";
             hashFunction = hash_MD5_string;
-        if (isSHA1)
+        }
+
+        if (isSHA1){
             hashFunction = hash_SHA1_string;
+            hashName = "SHA1";
+        }
+
 
         if (!sTab.empty())
             for (int i = 0; i < sTab.size(); i++)
@@ -197,9 +204,10 @@ int main(int argc, char *argv[]) {
     chaine = myInverter3.nouvelle_chaine(1, 100);
     cout << "begin de taille 1 a " << 100 << ":" << chaine.b << " ..... " << chaine.e << endl;
 
-    myInverter3.table = myInverter3.creer_table(10, 1000);
+    myInverter3.table = myInverter3.creer_table(10, 100);
     myInverter3.write("res");
-
-
+    myInverter2.read("res");
+    myInverter2.write("res2");
+    myInverter3.afficheTable(10);
     return 0;
 }

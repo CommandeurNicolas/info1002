@@ -60,6 +60,8 @@ public:
     Table creer_table(int largeur, int hauteur);
 
     bool write(string namefile);
+    bool read(string namefile);
+    void afficheTable(int shift);
 };
 
 

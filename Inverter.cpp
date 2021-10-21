@@ -11,9 +11,14 @@
 #include <limits>
 #include <bitset>
 #include <fstream>
+#include <sstream>
+#include <iterator>
+#include <iostream>
+
 using namespace std;
 
-Inverter::Inverter(string alphabet, uint64_t min, uint64_t max, void hashMethod(string, Byte *), int sizeByte, string hashingMethod) {
+Inverter::Inverter(string alphabet, uint64_t min, uint64_t max, void hashMethod(string, Byte *), int sizeByte,
+                   string hashingMethod) {
     this->alphabet = alphabet;
 
     this->minSize = min;
@@ -131,12 +136,59 @@ bool Inverter::write(string namefile) {
            this->table.hauteur << " " <<
            this->table.largeur << endl;
 
-    string res = "";
+
     for (const auto &item: this->table.chaines) {
-        res += bitset<64>(item.b).to_string();
-        res += bitset<64>(item.e).to_string();
+
+        MyFile << item.b << endl << item.e << endl;
     }
-    MyFile << res << endl;
     MyFile.close();
     return true;
+}
+
+bool Inverter::read(string namefile) {
+
+
+    string str;
+    ifstream MyFile(namefile);
+
+    if (!MyFile.good())
+        return false;
+
+    getline(MyFile, str);
+
+    istringstream inverterInfo(str);
+
+    inverterInfo >> this->hashingMethod >>
+                 this->alphabet >>
+                 this->minSize >>
+                 this->maxSize >>
+                 this->table.hauteur >>
+                 this->table.largeur;
+
+
+    this->table.chaines = vector<Chaine>(this->table.hauteur);
+
+    uint64_t begin, end;
+    int n = 0;
+
+    while (MyFile >> this->table.chaines[n].b >> this->table.chaines[n].e) {
+        n++;
+    }
+
+    MyFile.close();
+    return true;
+}
+
+void Inverter::afficheTable(int shift) {
+    for (int i = 0; i < shift; ++i) {
+        cout << "Index : " << i << " : " <<
+             this->table.chaines[i].b << " ..... " <<
+             this->table.chaines[i].e << endl;
+    }
+    cout << "....." << endl << "....." << endl;
+    for (int i = shift; i > 0; --i) {
+        cout << "Index : " << this->table.chaines.size() - i << " : " <<
+             this->table.chaines[this->table.chaines.size() - i].b << " ..... " <<
+             this->table.chaines[this->table.chaines.size() - i].e << endl;
+    }
 }
