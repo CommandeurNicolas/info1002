@@ -193,22 +193,27 @@ void Inverter::afficheTable(int shift) {
     }
 }
 
-bool Inverter::inverse(int *empreinte, int *clair) {
+bool Inverter::inverse(Byte *empreinte, string *clair) {
     int nbCandidat = 0;
     uint64_t idx;
     for (int t = this->table.largeur - 1; t > 0; t--) {
-        idx = this->h2i(empreinte, i);
+        idx = this->h2i(empreinte, t);
         for (int i = t + 1; i < this->table.largeur; ++i) {
             idx = this->i2i(idx, i);
         }
-        iterator a, b;
-        if ((recherche(idx, a, b) > 0) {
-            for (auto i = a; i <= b ; ++i) {
-                if()
+        vector<Chaine>::iterator a,b; 
+        if ((this->recherche(idx, &a, &b) > 0) {
+            for (auto i = a; i <= b; ++i) {
+                if (this->verifieCandidat(t, i, clair)) {
+                    return true;
+                } else {
+                    nbCandidat++;
+                }
             }
 
         }
     }
     return false;
-
 }
+
+bool
