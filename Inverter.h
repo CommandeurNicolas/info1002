@@ -62,6 +62,8 @@ public:
     bool write(string namefile);
     bool read(string namefile);
     void afficheTable(int shift);
+
+    int inverse(Byte *empreinte, string *clair);
 };
 
 
