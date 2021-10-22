@@ -3,4 +3,4 @@ main.o
 Dockerfile
 *.zip
 *.tar.gz
-res
+res*

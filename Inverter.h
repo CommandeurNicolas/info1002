@@ -63,6 +63,8 @@ public:
     bool read(string namefile);
     void afficheTable(int shift);
 
+    int recherche(uint64_t idx, vector<Chaine>::iterator *a, vector<Chaine>::iterator *b);
+    int verifieCandidat(Byte* h, int t, int idx, string* clair);
     bool inverse(Byte *empreinte, string *clair);
 };
 

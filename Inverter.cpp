@@ -201,8 +201,8 @@ bool Inverter::inverse(Byte *empreinte, string *clair) {
         for (int i = t + 1; i < this->table.largeur; ++i) {
             idx = this->i2i(idx, i);
         }
-        vector<Chaine>::iterator a,b; 
-        if ((this->recherche(idx, &a, &b) > 0) {
+        vector<Chaine>::iterator a,b;
+        if (this->recherche(idx, &a, &b) > 0) {
             for (auto i = a; i <= b; ++i) {
                 if (this->verifieCandidat(t, i, clair)) {
                     return true;
@@ -210,10 +210,50 @@ bool Inverter::inverse(Byte *empreinte, string *clair) {
                     nbCandidat++;
                 }
             }
-
         }
     }
     return false;
 }
+// recherche dichotomique dans la table les premières et dernières lignes dont
+// la seconde colonne est égale à idx
+//   - table : table arc-en-ciel
+//   - hauteur : nombre de chaines dans la table
+//   - idx : indice à rechercher dans la dernière (deuxième) colonne
+//   - a et b : (résultats) numéros des premières et dernières lignes dont les
+//     dernières colonnes sont égale à idx
+int Inverter::recherche(uint64_t idx, vector<Chaine>::iterator *a, vector<Chaine>::iterator *b) {
 
-bool
+    struct Comp
+    {
+        bool operator() (Chaine c, uint64_t idx) const {return c.e == idx;}
+        bool operator() (uint64_t idx, Chaine c) const {return c.e == idx;}
+    };
+
+    pair<vector<Chaine>::iterator,vector<Chaine>::iterator> bounds;
+
+    bounds=equal_range (this->table.chaines.begin(), this->table.chaines.end(), idx, Comp{});
+
+    cout << "bounds at positions " << (bounds.first - this->table.chaines.begin());
+    cout << " and " << (bounds.second - this->table.chaines.begin()) << '\n';
+
+    a = &(bounds.first);
+    b = &(bounds.second);
+
+    return bounds.second - bounds.first;
+}
+
+// vérifie si un candidat est correct
+//   - h : empreinte à inverser
+//   - t : numéro de la colonne où a été trouvé le candidat
+//   - idx : indice candidat (de la colonne t)
+//   - clair : résultat : contient le texte clair obtenu
+int Inverter::verifieCandidat(Byte* h, int t, int idx, string* clair)
+{
+    // for (int i = 1; i < t; i++) {
+    //     idx = i2i(idx, i);
+    // }
+    // clair = i2c(idx);
+    // h2 = H(clair);
+    // return h2 == h;
+    return 0;
+}
