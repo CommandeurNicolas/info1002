@@ -81,6 +81,8 @@ void i2iTest(vector <string> args) {
     // TODO: faire le test de i2i (QUESTION 6)
 }
 
+
+
 int main2(int argc, char *argv[]) {
 
     // CLI PARSING
@@ -133,12 +135,12 @@ int main2(int argc, char *argv[]) {
             std::cout << "Testing : \n\n";
         }
 
-        if (isMD5){
+        if (isMD5) {
             hashName = "MD5";
             hashFunction = hash_MD5_string;
         }
 
-        if (isSHA1){
+        if (isSHA1) {
             hashFunction = hash_SHA1_string;
             hashName = "SHA1";
         }

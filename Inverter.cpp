@@ -192,3 +192,23 @@ void Inverter::afficheTable(int shift) {
              this->table.chaines[this->table.chaines.size() - i].e << endl;
     }
 }
+
+bool Inverter::inverse(int *empreinte, int *clair) {
+    int nbCandidat = 0;
+    uint64_t idx;
+    for (int t = this->table.largeur - 1; t > 0; t--) {
+        idx = this->h2i(empreinte, i);
+        for (int i = t + 1; i < this->table.largeur; ++i) {
+            idx = this->i2i(idx, i);
+        }
+        iterator a, b;
+        if ((recherche(idx, a, b) > 0) {
+            for (auto i = a; i <= b ; ++i) {
+                if()
+            }
+
+        }
+    }
+    return false;
+
+}
