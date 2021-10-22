@@ -171,45 +171,50 @@ int main2(int argc, char *argv[]) {
 
 int main(int argc, char *argv[]) {
 
-    string s = "Salut";
-    string s2 = "Bob";
+    // string s = "Salut";
+    // string s2 = "Bob";
 
-    Inverter myInverter1("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, 3, hash_SHA1_string, 20, "MD5");
-    Inverter myInverter2("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4, 4, hash_SHA1_string, 20, "MD5");
+    // Inverter myInverter1("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, 3, hash_SHA1_string, 20, "MD5");
+    // Inverter myInverter2("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4, 4, hash_SHA1_string, 20, "MD5");
     Inverter myInverter3("abcdefghijklmnopqrstuvwxyz", 4, 5, hash_MD5_string, 20, "MD5");
 
-    hash_MD5_string(s, myInverter3.b);
-    string res = hexStr(myInverter3.b, myInverter3.sizeByte);
-    cout << res << endl;
+    // hash_MD5_string(s, myInverter3.b);
+    // string res = hexStr(myInverter3.b, myInverter3.sizeByte);
+    // cout << res << endl;
 
-    hash_SHA1_string(s2, myInverter3.b);
-    res = hexStr(myInverter3.b, myInverter3.sizeByte);
-    cout << res << endl;
+    // hash_SHA1_string(s2, myInverter3.b);
+    // res = hexStr(myInverter3.b, myInverter3.sizeByte);
+    // cout << res << endl;
 
-    cout << myInverter1.i2c(12345) << endl;
-    cout << myInverter2.i2c(1234) << endl;
-    cout << myInverter3.i2c(382537153) << endl;
+    // cout << myInverter1.i2c(12345) << endl;
+    // cout << myInverter2.i2c(1234) << endl;
+    // cout << myInverter3.i2c(382537153) << endl;
 
-    hash_MD5_string("oups", myInverter3.b);
-    cout << hexStr(myInverter3.b, myInverter3.sizeByte) << endl <<
-         myInverter3.N << endl
-         << "h2i : " << myInverter3.h2i(myInverter3.b, 1) << endl;
+    // hash_MD5_string("oups", myInverter3.b);
+    // cout << hexStr(myInverter3.b, myInverter3.sizeByte) << endl <<
+    //      myInverter3.N << endl
+    //      << "h2i : " << myInverter3.h2i(myInverter3.b, 1) << endl;
 
-    cout << myInverter3.i2i(1, 1) << endl;
+    // cout << myInverter3.i2i(1, 1) << endl;
 
-    Chaine chaine = myInverter3.nouvelle_chaine(1, 1);
-    cout << "begin de taille 1 a " << 1 << ":" << chaine.b << " ..... " << chaine.e << endl;
-    chaine = myInverter3.nouvelle_chaine(1, 2);
-    cout << "begin de taille 1 a " << 2 << ":" << chaine.b << " ..... " << chaine.e << endl;
-    chaine = myInverter3.nouvelle_chaine(1, 10);
-    cout << "begin de taille 1 a " << 10 << ":" << chaine.b << " ..... " << chaine.e << endl;
-    chaine = myInverter3.nouvelle_chaine(1, 100);
-    cout << "begin de taille 1 a " << 100 << ":" << chaine.b << " ..... " << chaine.e << endl;
+    // Chaine chaine = myInverter3.nouvelle_chaine(1, 1);
+    // cout << "begin de taille 1 a " << 1 << ":" << chaine.b << " ..... " << chaine.e << endl;
+    // chaine = myInverter3.nouvelle_chaine(1, 2);
+    // cout << "begin de taille 1 a " << 2 << ":" << chaine.b << " ..... " << chaine.e << endl;
+    // chaine = myInverter3.nouvelle_chaine(1, 10);
+    // cout << "begin de taille 1 a " << 10 << ":" << chaine.b << " ..... " << chaine.e << endl;
+    // chaine = myInverter3.nouvelle_chaine(1, 100);
+    // cout << "begin de taille 1 a " << 100 << ":" << chaine.b << " ..... " << chaine.e << endl;
 
-    myInverter3.table = myInverter3.creer_table(10, 100);
+    myInverter3.table = myInverter3.creer_table(10, 10000);
     myInverter3.write("res");
-    myInverter2.read("res");
-    myInverter2.write("res2");
+    myInverter3.read("res");
+    // myInverter2.write("res2");
     myInverter3.afficheTable(10);
+
+    vector<Chaine>::iterator a,b;
+
+    myInverter3.recherche(10000, 3500, &a, &b);
+
     return 0;
 }

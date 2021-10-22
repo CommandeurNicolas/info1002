@@ -63,7 +63,9 @@ public:
     bool read(string namefile);
     void afficheTable(int shift);
 
-    int inverse(Byte *empreinte, string *clair);
+    int recherche(int hauteur, uint64_t idx, vector<Chaine>::iterator *a, vector<Chaine>::iterator *b);
+    int verifie_candidat(Byte* h, int t, int idx, string* clair);
+    int inverse(int hauteur, int largeur, Byte* h, string clair);
 };
 
 
