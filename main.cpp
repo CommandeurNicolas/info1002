@@ -19,14 +19,7 @@ int value;
 int d = 5;
 string hashName;
 
-string hexStr(Byte *data, int len) {
-    stringstream ss;
-    ss << hex;
 
-    for (int i(0); i < len; ++i)
-        ss << setw(2) << setfill('0') << (int) data[i];
-    return ss.str();
-}
 
 void setMD5HashFunction() {
     hashFunction = hash_MD5_string;
@@ -38,15 +31,16 @@ void setSHA1HashFunction() {
 
 void hashTest(string s) {
     string res;
+    Inverter myInverter(alphabet, min_size, max_size, hashFunction, 32, "");
 
     if (hashFunction == hash_MD5_string) {
         hash_MD5_string(s, b);
-        res = hexStr(b, 32);
+        res = myInverter.hexStr(b);
         cout << "Hashing \"" << s << "\" with MD5 function : " << res << endl << endl;
     }
     if (hashFunction == hash_SHA1_string) {
         hash_SHA1_string(s, b);
-        res = hexStr(b, 32);
+        res = myInverter.hexStr(b);
         cout << "Hashing \"" << s << "\" with SHA1 function : " << res << endl << endl;
     }
 }
@@ -72,7 +66,7 @@ void h2iTest(vector <string> args) {
     hash_MD5_string(args[0], b);
     cout << "alphabet = " << alphabet << endl << "taille_min = " << min_size << endl << "taille_max = " << max_size
          << endl << "N = " << myInverter.N << endl;
-    cout << "MD5(\"oups\") = " << hexStr(b, 32) << endl << "h2i(MD5(\"oups\"), " << args[1] << ") = "
+    cout << "MD5(\"oups\") = " << myInverter.hexStr(b, 32) << endl << "h2i(MD5(\"oups\"), " << args[1] << ") = "
          << myInverter.h2i(b, stoi(args[1])) << endl << endl;
 }
 
@@ -80,7 +74,6 @@ void i2iTest(vector <string> args) {
     cout << args[0] << endl;
     // TODO: faire le test de i2i (QUESTION 6)
 }
-
 
 
 int main2(int argc, char *argv[]) {
@@ -176,7 +169,7 @@ int main(int argc, char *argv[]) {
 
     // Inverter myInverter1("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, 3, hash_SHA1_string, 20, "MD5");
     // Inverter myInverter2("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4, 4, hash_SHA1_string, 20, "MD5");
-    Inverter myInverter3("abcdefghijklmnopqrstuvwxyz", 4, 5, hash_MD5_string, 20, "MD5");
+    Inverter myInverter3("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4, 4, hash_MD5_string, 16, "MD5");
 
     // hash_MD5_string(s, myInverter3.b);
     // string res = hexStr(myInverter3.b, myInverter3.sizeByte);
@@ -206,15 +199,23 @@ int main(int argc, char *argv[]) {
     // chaine = myInverter3.nouvelle_chaine(1, 100);
     // cout << "begin de taille 1 a " << 100 << ":" << chaine.b << " ..... " << chaine.e << endl;
 
-    myInverter3.table = myInverter3.creer_table(10, 10000);
+    myInverter3.table = myInverter3.creer_table(1000, 100000);
     myInverter3.write("res");
     myInverter3.read("res");
     // myInverter2.write("res2");
-    myInverter3.afficheTable(10);
+   // myInverter3.afficheTable(100);
 
-    vector<Chaine>::iterator a,b;
-
-    myInverter3.recherche(10000, 3500, &a, &b);
-
+    vector<Chaine>::iterator a, b;
+    Byte by[myInverter3.sizeByte];
+    string abcd = "AAAA";
+    myInverter3.hash(abcd, by);
+    cout << hexStr(by, myInverter3.sizeByte) << endl;
+    string reversedString = "";
+    myInverter3.couverture();
+    if (myInverter3.inverse(by, reversedString))
+        cout << "Foudn  it" << endl;
+    else
+        cout << "Fuck " << endl;
+    cout << reversedString << endl;
     return 0;
 }

@@ -193,7 +193,7 @@ void Inverter::afficheTable(int shift) {
     }
 }
 
-bool Inverter::inverse(Byte *empreinte, string *clair) {
+bool Inverter::inverse(Byte *empreinte, string& clair) {
     int nbCandidat = 0;
     uint64_t idx;
     for (int t = this->table.largeur - 1; t > 0; t--) {
@@ -201,10 +201,10 @@ bool Inverter::inverse(Byte *empreinte, string *clair) {
         for (int i = t + 1; i < this->table.largeur; ++i) {
             idx = this->i2i(idx, i);
         }
-        vector<Chaine>::iterator a,b;
-        if (this->recherche(idx, &a, &b) > 0) {
-            for (auto i = a; i <= b; ++i) {
-                if (this->verifieCandidat(t, i, clair)) {
+        vector<Chaine>::iterator a, b;
+        if (this->recherche(idx, a, b)) {
+            for (vector<Chaine>::iterator i = a; i != b; ++i) {
+                if (this->verifieCandidat(empreinte, t, i->b, clair)) {
                     return true;
                 } else {
                     nbCandidat++;
@@ -214,6 +214,17 @@ bool Inverter::inverse(Byte *empreinte, string *clair) {
     }
     return false;
 }
+
+void Inverter::couverture() {
+    auto m = (double) this->table.hauteur;
+    auto v = 1.0f;
+    for (auto i = 0; i < this->table.largeur; i++) {
+        v *= 1 - (m / this->N);
+        m = this->N * (1 - exp(-m / this->N));
+    }
+    cout << "Couverture ==> " << 100.0 * (1.0 - v) << " %" << endl;
+}
+
 // recherche dichotomique dans la table les premières et dernières lignes dont
 // la seconde colonne est égale à idx
 //   - table : table arc-en-ciel
@@ -221,25 +232,22 @@ bool Inverter::inverse(Byte *empreinte, string *clair) {
 //   - idx : indice à rechercher dans la dernière (deuxième) colonne
 //   - a et b : (résultats) numéros des premières et dernières lignes dont les
 //     dernières colonnes sont égale à idx
-int Inverter::recherche(uint64_t idx, vector<Chaine>::iterator *a, vector<Chaine>::iterator *b) {
+bool Inverter::recherche(uint64_t idx, vector<Chaine>::iterator &a, vector<Chaine>::iterator &b) {
 
-    struct Comp
-    {
-        bool operator() (Chaine c, uint64_t idx) const {return c.e == idx;}
-        bool operator() (uint64_t idx, Chaine c) const {return c.e == idx;}
+    struct Comp {
+        bool operator()(const Chaine &c, uint64_t idx) const { return c.e < idx; }
+
+        bool operator()(uint64_t idx, const Chaine &c) const { return idx < c.e; }
     };
 
-    pair<vector<Chaine>::iterator,vector<Chaine>::iterator> bounds;
+    pair <vector<Chaine>::iterator, vector<Chaine>::iterator> bounds;
 
-    bounds=equal_range (this->table.chaines.begin(), this->table.chaines.end(), idx, Comp{});
+    bounds = equal_range(this->table.chaines.begin(), this->table.chaines.end(), idx, Comp{});
 
-    cout << "bounds at positions " << (bounds.first - this->table.chaines.begin());
-    cout << " and " << (bounds.second - this->table.chaines.begin()) << '\n';
+    a = bounds.first;
+    b = bounds.second;
 
-    a = &(bounds.first);
-    b = &(bounds.second);
-
-    return bounds.second - bounds.first;
+    return (bounds.second - bounds.first) != this->table.chaines.size();
 }
 
 // vérifie si un candidat est correct
@@ -247,13 +255,23 @@ int Inverter::recherche(uint64_t idx, vector<Chaine>::iterator *a, vector<Chaine
 //   - t : numéro de la colonne où a été trouvé le candidat
 //   - idx : indice candidat (de la colonne t)
 //   - clair : résultat : contient le texte clair obtenu
-int Inverter::verifieCandidat(Byte* h, int t, int idx, string* clair)
-{
-    // for (int i = 1; i < t; i++) {
-    //     idx = i2i(idx, i);
-    // }
-    // clair = i2c(idx);
-    // h2 = H(clair);
-    // return h2 == h;
-    return 0;
+bool Inverter::verifieCandidat(Byte *h, int t, uint64_t idx, string &clair) {
+    for (int i = 1; i < t; i++) {
+        idx = this->i2i(idx, i);
+    }
+    clair = this->i2c(idx);
+    Byte h2[this->sizeByte];
+    this->hash(clair, h2);
+    if (clair =="AAAA")
+        cout << this->hexStr(h2) << endl;
+    return h2 == h;
+}
+
+string Inverter::hexStr(Byte *data) {
+    stringstream ss;
+    ss << hex;
+
+    for (int i(0); i < this->sizeByte; ++i)
+        ss << setw(2) << setfill('0') << (int) data[i];
+    return ss.str();
 }
