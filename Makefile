@@ -2,8 +2,8 @@
 NAME    = main
 SRC     = main.cpp 
 OBJ     = $(SRC:.cpp=.o)
-CFLAGS  = -Wall -Werror -Wextra -pedantic -ansi -O3
-#CFLAGS  = -Wall -Werror -Wextra -pedantic -ansi -O0 -g
+# CFLAGS  = -Wall -Werror -Wextra -pedantic -ansi -O3
+CFLAGS  = -Wall -Werror -Wextra -pedantic -ansi -O0 -g
 LFLAGS    = -lcrypto -lssl
 CC        = g++
 
