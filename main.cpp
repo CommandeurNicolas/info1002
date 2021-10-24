@@ -107,11 +107,11 @@ int main(int argc, char *argv[]) {
     CLI::App app{};
     // Create subcommand (via options)
     vector<string> createArgs, infoArgs, statsArgs, crackArgs, bruteforceArgs;
-    auto create = app.add_option("--create", createArgs, "create the corresponding rainbow tables (M=height, T=width)")->expected(3);
-    auto info = app.add_option("--info", infoArgs, "display some information about the table from given file")->expected(2);
-    auto stats = app.add_option("--stats", statsArgs, "give some information (cover, size) about rainbow tables without computing them (M=height, T=width)")->expected(2);
-    auto crack = app.add_option("--crack", crackArgs, "crack the given hash with the rainbow tables")->allow_extra_args(true);
-    auto bruteforce = app.add_option("--bruteforce", bruteforceArgs, "brute force the given hash")->expected(1);
+    auto create = app.add_option("--create", createArgs, "<M> <T> <FILENAME>\ncreate the corresponding rainbow tables (M=height, T=width)\n")->expected(3);
+    auto info = app.add_option("--info", infoArgs, "<FILENAME> [LIMIT]\ndisplay some information about the table from given file\n")->expected(2);
+    auto stats = app.add_option("--stats", statsArgs, "<M> <T>\ngive some information (cover, size) about rainbow tables without computing them (M=height, T=width)\n")->expected(2);
+    auto crack = app.add_option("--crack", crackArgs, "<H> <FILENAMES>\ncrack the given hash with the rainbow tables\n")->allow_extra_args(true);
+    auto bruteforce = app.add_option("--bruteforce", bruteforceArgs, "<H>\nbrute force the given hash\n")->expected(1);
     
     // App command flags
     bool isMD5{false};
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
     vector<string> iTab;
     vector<string> h2iArgs;
     vector<string> i2iArgs;
-    auto test = app.add_subcommand("test", "development tests (\"./main test --list\" for available tests)");
+    auto test = app.add_subcommand("test", "development tests (\"./main test --help\" for available tests)");
 
     // Test flag and options
     test->add_flag("--config", isConfig, "print the default config for the tests");
