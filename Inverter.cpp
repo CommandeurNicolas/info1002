@@ -14,6 +14,9 @@
 #include <sstream>
 #include <iterator>
 #include <iostream>
+#include <climits>
+
+typedef unsigned char Byte; // facultatif
 
 using namespace std;
 
@@ -193,7 +196,7 @@ void Inverter::afficheTable(int shift) {
     }
 }
 
-bool Inverter::inverse(Byte *empreinte, string& clair) {
+bool Inverter::inverse(Byte *empreinte, string &clair) {
     int nbCandidat = 0;
     uint64_t idx;
     for (int t = this->table.largeur - 1; t > 0; t--) {
@@ -262,9 +265,7 @@ bool Inverter::verifieCandidat(Byte *h, int t, uint64_t idx, string &clair) {
     clair = this->i2c(idx);
     Byte h2[this->sizeByte];
     this->hash(clair, h2);
-    if (clair =="AAAA")
-        cout << this->hexStr(h2) << endl;
-    return h2 == h;
+    return this->hexStr(h2) == this->hexStr(h);
 }
 
 string Inverter::hexStr(Byte *data) {
@@ -275,3 +276,4 @@ string Inverter::hexStr(Byte *data) {
         ss << setw(2) << setfill('0') << (int) data[i];
     return ss.str();
 }
+

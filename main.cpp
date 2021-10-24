@@ -61,12 +61,12 @@ void i2cTest(string s) {
 }
 
 void h2iTest(vector <string> args) {
-    Inverter myInverter(alphabet, min_size, max_size, hashFunction, 32, "");
+    Inverter myInverter(alphabet, min_size, max_size, hashFunction, 16, "");
 
     hash_MD5_string(args[0], b);
     cout << "alphabet = " << alphabet << endl << "taille_min = " << min_size << endl << "taille_max = " << max_size
          << endl << "N = " << myInverter.N << endl;
-    cout << "MD5(\"oups\") = " << myInverter.hexStr(b, 32) << endl << "h2i(MD5(\"oups\"), " << args[1] << ") = "
+    cout << "MD5(\"oups\") = " << myInverter.hexStr(b) << endl << "h2i(MD5(\"oups\"), " << args[1] << ") = "
          << myInverter.h2i(b, stoi(args[1])) << endl << endl;
 }
 
@@ -207,12 +207,21 @@ int main(int argc, char *argv[]) {
 
     vector<Chaine>::iterator a, b;
     Byte by[myInverter3.sizeByte];
-    string abcd = "AAAA";
+    string abcd = "ABCD";
     myInverter3.hash(abcd, by);
-    cout << hexStr(by, myInverter3.sizeByte) << endl;
+    cout << myInverter3.hexStr(by) << endl;
     string reversedString = "";
     myInverter3.couverture();
     if (myInverter3.inverse(by, reversedString))
+        cout << "Foudn  it" << endl;
+    else
+        cout << "Fuck " << endl;
+    cout << reversedString << endl;
+    const char footprint[]="08054846bbc9933fd0395f8be516a9f9";
+    Byte em[sizeof(footprint)];
+    strcpy((char *)em,"08054846bbc9933fd0395f8be516a9f9");
+    cout << myInverter3.hexStr(em) << endl;
+    if (myInverter3.inverse(em, reversedString))
         cout << "Foudn  it" << endl;
     else
         cout << "Fuck " << endl;

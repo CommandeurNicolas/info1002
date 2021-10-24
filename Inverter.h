@@ -10,15 +10,14 @@
 
 using namespace std;
 
-struct Chaine{
+struct Chaine {
     uint64_t b, e;
 };
 
-struct Table{
-    vector<Chaine> chaines;
+struct Table {
+    vector <Chaine> chaines;
     int hauteur, largeur;
 };
-
 
 
 class Inverter {
@@ -28,7 +27,7 @@ public:
     uint64_t minSize, maxSize;
     uint64_t size;
     uint64_t N;
-    vector<uint64_t> powT;
+    vector <uint64_t> powT;
 
     string hashingMethod;
     string texte;
@@ -41,7 +40,8 @@ public:
     void (*hash)(string s, Byte *empreinte);
 
     // Constructor
-    Inverter(string alphabet, uint64_t min, uint64_t max, void hashMethod(string, Byte *), int sizeByte, string hashingMethod);
+    Inverter(string alphabet, uint64_t min, uint64_t max, void hashMethod(string, Byte *), int sizeByte,
+             string hashingMethod);
 
     // Functions
 
@@ -60,17 +60,24 @@ public:
     Table creer_table(int largeur, int hauteur);
 
     bool write(string namefile);
+
     bool read(string namefile);
+
     void afficheTable(int shift);
 
-    bool recherche(uint64_t idx, vector<Chaine>::iterator& a, vector<Chaine>::iterator& b);
-    bool verifieCandidat(Byte* h, int t, uint64_t idx, string& clair);
-    bool inverse(Byte *empreinte, string& clair);
+    bool recherche(uint64_t idx, vector<Chaine>::iterator &a, vector<Chaine>::iterator &b);
+
+    bool verifieCandidat(Byte *h, int t, uint64_t idx, string &clair);
+
+    bool inverse(Byte *empreinte, string &clair);
 
     void couverture();
-    string hexStr(Byte *data) ;
 
-    };
+    string hexStr(Byte *data);
+
+    Byte *strHex(string &s);
+
+};
 
 
 #endif //CRYPTO_INVERTER_H

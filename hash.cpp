@@ -7,7 +7,7 @@ typedef unsigned char Byte; // facultatif
 using namespace std;
 
 void hash_MD5(const char *s, Byte *empreinte) {
-    MD5((unsigned char *) s, strlen(s), empreinte);
+    MD5((Byte *) s, strlen(s), empreinte);
 }
 
 void hash_MD5_string(string s, Byte *empreinte) {
@@ -15,7 +15,7 @@ void hash_MD5_string(string s, Byte *empreinte) {
 }
 
 void hash_SHA1(const char *s, Byte *empreinte) {
-    SHA1((unsigned char *) s, strlen(s), empreinte);
+    SHA1((Byte *) s, strlen(s), empreinte);
 }
 
 void hash_SHA1_string(string s, Byte *empreinte) {
